@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use Laminas\Db\Adapter\Adapter;
+use Laminas\Db\RowGateway\RowGateway;
 use Laminas\Db\Sql\Expression;
 use Laminas\Db\Sql\Sql;
 use Laminas\Db\TableGateway\Feature\RowGatewayFeature;
@@ -30,35 +31,31 @@ class PostProcessorHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
         $formData = $request->getParsedBody();
-
         if ($formData === null) {
             return new RedirectResponse('/');
         }
 
-        $table = new TableGateway('scheduled_posts', $this->adapter, new RowGatewayFeature('id'));
-
         if (!empty($formData['id'])) {
-            $scheduledPosts = $table->select(['id' => $formData['id']]);
-            $post = $scheduledPosts->current();
+            $postId = $formData['id'];
+            $table = new TableGateway('scheduled_posts', $this->adapter, new RowGatewayFeature('id'));
+            $post = $table->select(['id' => $postId])->current();
             $post->title = $formData['post_title'];
             $post->body = $formData['post_body'];
             $post->publish_on = $formData['post_publish_date'];
             $post->save();
-            return new RedirectResponse('/' . $post->id);
+
+            return new RedirectResponse('/' . $postId);
         }
 
-        $table->insert([
-            'title' => $formData['post_title'],
-            'body' => $formData['post_body'],
-            'publish_on' => $formData['post_publish_date']
+        $rowGateway = new RowGateway('id', 'scheduled_posts', $this->adapter);
+        $rowGateway->populate([
+            'title' => 'post_title',
+            'body' => 'post_body',
+            'publish_on' => 'post_publish_date',
         ]);
-        $sql    = new Sql($this->adapter);
-        $select = $sql->select('scheduled_posts');
-        $select->columns(['id' => new Expression('MAX(id)')]);
-        $selectString = $sql->buildSqlString($select);
-        $results = $this->adapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+        $rowGateway->save();
 
-        return new RedirectResponse('/' . $results->current()->id);
+        return new RedirectResponse('/' . $rowGateway->id);
 
     }
 }

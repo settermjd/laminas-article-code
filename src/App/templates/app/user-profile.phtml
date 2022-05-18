@@ -1,0 +1,20 @@
+<?php $this->headTitle('Home'); ?>
+
+<div class="mb-4 p-2">
+    <h1 class="text-center"><a href="/">User Profile</a></h1>
+    <div class="grid gap-4 mt-8 border-2 bg-white border-slate-200 p-8 rounded-lg w-4/5 w-auto">
+        <div>
+            <div class="w-full">
+                <p><?= $this->user->getFirstName(); ?> <?= $this->user->getLastName(); ?></p>
+                <p><?= $this->user->getEmailAddress(); ?></p>
+            </div>
+            <div class="w-full">
+            </div>
+
+            <div class="w-full">
+            </div>
+            <div class="w-full">
+            </div>
+        </div>
+    </div>
+</div>

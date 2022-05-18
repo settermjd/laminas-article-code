@@ -878,6 +878,10 @@ input.submit:focus, button:focus {
   margin-left: 0.5rem;
 }
 
+.mt-8 {
+  margin-top: 2rem;
+}
+
 .grid {
   display: grid;
 }
@@ -888,6 +892,14 @@ input.submit:focus, button:focus {
 
 .w-full {
   width: 100%;
+}
+
+.w-4\/5 {
+  width: 80%;
+}
+
+.w-auto {
+  width: auto;
 }
 
 .cursor-pointer {
@@ -908,6 +920,14 @@ input.submit:focus, button:focus {
 
 .gap-2 {
   gap: 0.5rem;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.border-2 {
+  border-width: 2px;
 }
 
 .border-t-2 {
@@ -932,8 +952,17 @@ input.submit:focus, button:focus {
   border-color: rgb(241 245 249 / var(--tw-border-opacity));
 }
 
+.bg-white {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
 .p-2 {
   padding: 0.5rem;
+}
+
+.p-8 {
+  padding: 2rem;
 }
 
 .pt-4 {
@@ -946,6 +975,10 @@ input.submit:focus, button:focus {
 
 .pl-4 {
   padding-left: 1rem;
+}
+
+.text-center {
+  text-align: center;
 }
 
 .text-lg {

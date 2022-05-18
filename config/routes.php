@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Middleware\IsLoggedInMiddleware;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
@@ -38,7 +39,50 @@ use Psr\Container\ContainerInterface;
  */
 
 return static function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
-    $app->get('/[{id:\d+}]', App\Handler\HomePageHandler::class, 'home');
-    $app->post('/posts', App\Handler\PostProcessorHandler::class, 'posts.process');
+    $app->get(
+        '/[{id:\d+}]',
+        [
+            IsLoggedInMiddleware::class,
+            App\Handler\HomePageHandler::class
+        ],
+        'home'
+    );
+    $app->post(
+        '/posts',
+        [
+            IsLoggedInMiddleware::class,
+            App\Handler\PostProcessorHandler::class
+        ],
+        'posts.process'
+    );
     $app->get('/api/ping', App\Handler\PingHandler::class, 'api.ping');
+    $app->get(
+        '/profile',
+        [
+            IsLoggedInMiddleware::class,
+            App\Handler\UserProfileHandler::class,
+        ],
+        'user.profile'
+    );
+    $app->route(
+        '/login',
+        [
+            App\Handler\LoginHandler::class,
+        ],
+        ['get', 'post'],
+        'user.login'
+    );
+    $app->route(
+        '/register',
+        App\Handler\RegistrationHandler::class,
+        ['get', 'post'],
+        'user.register'
+    );
+    $app->get(
+        '/logout',
+        [
+            App\Handler\LogoutHandler::class,
+        ],
+        'user.logout'
+    );
 };

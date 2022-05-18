@@ -13,7 +13,14 @@ declare(strict_types=1);
 return [
     'dependencies' => [
         'factories' => [
+            App\Handler\LoginHandler::class => App\Handler\LoginHandlerFactory::class,
+            App\Handler\LogoutHandler::class => App\Handler\LogoutHandlerFactory::class,
             App\Handler\PostProcessorHandler::class => App\Handler\PostProcessorHandlerFactory::class,
+            App\Handler\RegistrationHandler::class => App\Handler\RegistrationHandlerFactory::class,
+            App\Handler\UserProfileHandler::class => App\Handler\UserProfileHandlerFactory::class,
+            App\Middleware\IsLoggedInMiddleware::class => App\Middleware\IsLoggedInMiddlewareFactory::class,
+            App\Middleware\LinkedInOAuth2Middleware::class => App\Middleware\LinkedInOAuth2MiddlewareFactory::class,
+            App\Middleware\TemplateDefaultsMiddleware::class => App\Middleware\TemplateDefaultsMiddlewareFactory::class,
         ],
     ],
 ];

@@ -1,0 +1,42 @@
+<?php $this->headTitle('Home'); ?>
+
+<div class="mb-4 p-2">
+    <h1 class="text-center"><a href="/">Register for an account</a></h1>
+    <div class="grid gap-4 mt-8 border-2 bg-white border-slate-200 p-8 rounded-lg w-4/5 w-auto">
+        <div>
+            <form id="linkedin-post-scheduler"
+                  class="grid grid-cols-1 gap-2"
+                  method="post"
+                  action="/register">
+                <div class="w-full">
+                    <label>Email Address:</label>
+                    <input type="text"
+                           name="email_address">
+                </div>
+                <div class="w-full">
+                    <label>Password:</label>
+                    <input type="password"
+                           name="password">
+                </div>
+
+                <div class="w-full">
+                    <label>First name:</label>
+                    <input type="text"
+                           name="first_name">
+                </div>
+                <div class="w-full">
+                    <label>Last Name:</label>
+                    <input type="text"
+                           name="last_name">
+                </div>
+
+                <div class="w-full">
+                    <input type="submit"
+                           class="submit cursor-pointer"
+                           name="submit"
+                           value="Register">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

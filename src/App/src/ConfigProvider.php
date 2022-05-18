@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Database\UsersTableGateway;
+use App\Database\UsersTableGatewayFactory;
+use App\Middleware\TemplateDefaultsMiddleware;
+use App\Middleware\TemplateDefaultsMiddlewareFactory;
+use App\Service\LinkedInClientFactory;
+use LinkedIn\Client;
+
 /**
  * The configuration provider for the App module
  *
@@ -35,7 +42,10 @@ class ConfigProvider
                 Handler\PingHandler::class => Handler\PingHandler::class,
             ],
             'factories'  => [
+                Client::class => LinkedInClientFactory::class,
                 Handler\HomePageHandler::class => Handler\HomePageHandlerFactory::class,
+                TemplateDefaultsMiddleware::class => TemplateDefaultsMiddlewareFactory::class,
+                UsersTableGateway::class => UsersTableGatewayFactory::class,
             ],
         ];
     }

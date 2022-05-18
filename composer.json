@@ -55,8 +55,12 @@
         "laminas/laminas-stdlib": "^3.6",
         "mezzio/mezzio": "^3.7",
         "mezzio/mezzio-fastroute": "^3.0.3",
+        "mezzio/mezzio-flash": "^1.3",
         "mezzio/mezzio-helpers": "^5.7",
-        "mezzio/mezzio-laminasviewrenderer": "^2.2"
+        "mezzio/mezzio-laminasviewrenderer": "^2.2",
+        "mezzio/mezzio-session": "^1.6",
+        "mezzio/mezzio-session-ext": "^1.12",
+        "zoonman/linkedin-api-php-client": "^0.0.14"
     },
     "require-dev": {
         "laminas/laminas-development-mode": "^3.3.0",
