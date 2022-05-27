@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
-use Laminas\Db\Adapter\Adapter;
-use Laminas\Db\RowGateway\RowGateway;
-use Laminas\Db\TableGateway\Feature\RowGatewayFeature;
-use Laminas\Db\TableGateway\TableGateway;
+use App\Database\UsersTableGateway;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionMiddleware;
@@ -19,14 +16,10 @@ use Mezzio\Template\TemplateRendererInterface;
 
 class RegistrationHandler implements RequestHandlerInterface
 {
-    private TemplateRendererInterface $renderer;
-    private Adapter $adapter;
-
-    public function __construct(TemplateRendererInterface $renderer, Adapter $adapter)
-    {
-        $this->renderer = $renderer;
-        $this->adapter = $adapter;
-    }
+    public function __construct(
+        private readonly TemplateRendererInterface $renderer,
+        private readonly UsersTableGateway $table
+    ){}
 
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
@@ -38,21 +31,13 @@ class RegistrationHandler implements RequestHandlerInterface
         }
 
         $formData = $request->getParsedBody();
-        $rowGateway = new RowGateway('id', 'users', $this->adapter);
-        $rowGateway->populate([
-            'email_address' => $formData['email_address'],
-            'password' => $formData['password'],
-            'first_name' => $formData['first_name'],
-            'last_name' => $formData['last_name'],
-        ]);
-        $rowGateway->save();
-
-        $table = new TableGateway('users', $this->adapter, new RowGatewayFeature('id'));
-        $user = $table->select(['email_address' => $formData['email_address']])->current();
-
-        /** @var SessionInterface $session */
-        $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
-        $session->set('user_id', $user->id);
+        $result = $this->table->createUser($formData);
+        if ($result) {
+            $user = $this->table->findByEmail($formData['email_address']);
+            /** @var SessionInterface $session */
+            $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
+            $session->set('user_id', $user->getId());
+        }
 
         return new RedirectResponse('/');
     }

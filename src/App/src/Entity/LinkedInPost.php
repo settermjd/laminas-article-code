@@ -8,6 +8,12 @@ class LinkedInPost
     private string $title;
     private string $body;
     private string $publishOn;
+    private ?User $user;
+
+    public function __construct()
+    {
+        $this->user = new User();
+    }
 
     public function setId(int $id): void
     {
@@ -47,6 +53,19 @@ class LinkedInPost
     public function getPublishOn(): string
     {
         return $this->publishOn;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User|null $user
+     */
+    public function setUser(?User $user): void
+    {
+        $this->user = $user;
     }
 
 }

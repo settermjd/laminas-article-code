@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Middleware\IsLoggedInMiddleware;
 use Mezzio\Application;
+use Mezzio\Flash\FlashMessageMiddleware;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
 
@@ -66,11 +67,27 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     );
     $app->route(
         '/login',
-        [
-            App\Handler\LoginHandler::class,
-        ],
+        App\Handler\LoginHandler::class,
         ['get', 'post'],
         'user.login'
+    );
+    $app->route(
+        '/linkedin-integration',
+        App\Handler\LinkedInIntegrationHandler::class,
+        ['get', 'post'],
+        'user.linkedin.integration'
+    );
+    $app->route(
+        '/forgot-password',
+        App\Handler\ForgotPasswordHandler::class,
+        ['get', 'post'],
+        'user.forgot-password'
+    );
+    $app->route(
+        '/reset-password/{id:[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}}',
+        App\Handler\ResetPasswordHandler::class,
+        ['get', 'post'],
+        'user.reset-password'
     );
     $app->route(
         '/register',
@@ -80,9 +97,7 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     );
     $app->get(
         '/logout',
-        [
-            App\Handler\LogoutHandler::class,
-        ],
+        App\Handler\LogoutHandler::class,
         'user.logout'
     );
 };

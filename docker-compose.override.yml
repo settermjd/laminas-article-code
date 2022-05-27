@@ -15,8 +15,19 @@ services:
       target: core
       args:
         ENV: development
+    environment:
+      - LINKEDIN_REDIRECT_URL
+      - LINKEDIN_CLIENT_ID
+      - LINKEDIN_CLIENT_SECRET
     restart: unless-stopped
     volumes:
       - .:/var/www/html
+      - ./docker/php/config/ini/conf.d/request_order.ini:/usr/local/etc/php/conf.d/request_order.ini
       - ./docker/php/config/ini/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
       - ./docker/php/config/ini/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+
+  email:
+    image: mailhog/mailhog:v1.0.1
+    ports:
+      - "1025:1025" # smtp server
+      - "8025:8025" # web ui

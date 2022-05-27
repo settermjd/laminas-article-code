@@ -4,12 +4,19 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Command\LinkedIn\PublishToLinkedInCommand;
+use App\Command\LinkedIn\PublishToLinkedInCommandFactory;
+use App\Database\ScheduledPostsTableGateway;
+use App\Database\ScheduledPostsTableGatewayFactory;
 use App\Database\UsersTableGateway;
 use App\Database\UsersTableGatewayFactory;
 use App\Middleware\TemplateDefaultsMiddleware;
 use App\Middleware\TemplateDefaultsMiddlewareFactory;
+use App\Service\Email\UserNotificationService;
+use App\Service\Email\UserNotificationServiceFactory;
 use App\Service\LinkedInClientFactory;
-use LinkedIn\Client;
+use Laminas\Mail\Transport\TransportInterface;
+use League\OAuth2\Client\Provider\LinkedIn;
 
 /**
  * The configuration provider for the App module
@@ -28,6 +35,7 @@ class ConfigProvider
     {
         return [
             'dependencies' => $this->getDependencies(),
+            'laminas-cli' => $this->getCliConfig(),
             'templates'    => $this->getTemplates(),
         ];
     }
@@ -42,10 +50,28 @@ class ConfigProvider
                 Handler\PingHandler::class => Handler\PingHandler::class,
             ],
             'factories'  => [
-                Client::class => LinkedInClientFactory::class,
                 Handler\HomePageHandler::class => Handler\HomePageHandlerFactory::class,
+                LinkedIn::class => LinkedInClientFactory::class,
+                PublishToLinkedInCommand::class => PublishToLinkedInCommandFactory::class,
+                ScheduledPostsTableGateway::class => ScheduledPostsTableGatewayFactory::class,
                 TemplateDefaultsMiddleware::class => TemplateDefaultsMiddlewareFactory::class,
+                TransportInterface::class => EmailTransportFactory::class,
+                UserNotificationService::class => UserNotificationServiceFactory::class,
                 UsersTableGateway::class => UsersTableGatewayFactory::class,
+            ],
+        ];
+    }
+
+    /**
+     * Returns the CLI commands
+     *
+     * @return string[][]
+     */
+    public function getCliConfig() : array
+    {
+        return [
+            'commands' => [
+                'linkedin:publish-post' => PublishToLinkedInCommand::class,
             ],
         ];
     }

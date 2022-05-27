@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Middleware\TemplateDefaultsMiddleware;
 use Laminas\Stratigility\Middleware\ErrorHandler;
 use Mezzio\Application;
+use Mezzio\Flash\FlashMessageMiddleware;
 use Mezzio\Handler\NotFoundHandler;
 use Mezzio\Helper\ServerUrlMiddleware;
 use Mezzio\Helper\UrlHelperMiddleware;
@@ -68,8 +70,8 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // - route-based validation
     // - etc.
     $app->pipe(SessionMiddleware::class);
-    $app->pipe(\App\Middleware\TemplateDefaultsMiddleware::class);
-
+    $app->pipe(FlashMessageMiddleware::class);
+    $app->pipe(TemplateDefaultsMiddleware::class);
 
     // Register the dispatch middleware in the middleware pipeline
     $app->pipe(DispatchMiddleware::class);

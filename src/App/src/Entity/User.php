@@ -9,6 +9,7 @@ class User
     private string $firstName;
     private string $lastName;
     private string $password;
+    private ?string $resetPasswordId;
     private ?string $linkedinURN;
 
     public function getId(): int
@@ -51,6 +52,11 @@ class User
         $this->lastName = $lastName;
     }
 
+    public function getFullName(): string
+    {
+        return sprintf("%s %s", $this->firstName, $this->lastName);
+    }
+
     public function getPassword(): string
     {
         return $this->password;
@@ -69,5 +75,25 @@ class User
     public function setLinkedinURN(?string $linkedinURN = null): void
     {
         $this->linkedinURN = $linkedinURN;
+    }
+
+    public function isIntegratedWithLinkedIn(): bool
+    {
+        return (! empty($this->linkedinURN));
+    }
+
+    public function toArray(): array
+    {
+        return [];
+    }
+
+    public function getResetPasswordId(): ?string
+    {
+        return $this->resetPasswordId;
+    }
+
+    public function setResetPasswordId(?string $resetPasswordId): void
+    {
+        $this->resetPasswordId = $resetPasswordId;
     }
 }

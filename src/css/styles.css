@@ -75,7 +75,7 @@
         @apply p-4 rounded-lg p-4;
     }
 
-    input.submit, button {
+    input.submit, button, .button {
         @apply bg-purple-800 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 text-white font-semibold px-4 rounded-lg w-full hover:ease-in ease-out transition duration-150 hover:drop-shadow-md;
     }
 

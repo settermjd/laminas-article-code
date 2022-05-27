@@ -11,6 +11,8 @@ use Laminas\Db\Sql\Sql;
 use Laminas\Db\TableGateway\Feature\RowGatewayFeature;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Diactoros\Response\RedirectResponse;
+use Mezzio\Session\SessionInterface;
+use Mezzio\Session\SessionMiddleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -35,6 +37,9 @@ class PostProcessorHandler implements RequestHandlerInterface
             return new RedirectResponse('/');
         }
 
+        /** @var SessionInterface $session */
+        $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
+
         if (!empty($formData['id'])) {
             $postId = $formData['id'];
             $table = new TableGateway('scheduled_posts', $this->adapter, new RowGatewayFeature('id'));
@@ -49,9 +54,10 @@ class PostProcessorHandler implements RequestHandlerInterface
 
         $rowGateway = new RowGateway('id', 'scheduled_posts', $this->adapter);
         $rowGateway->populate([
-            'title' => 'post_title',
-            'body' => 'post_body',
-            'publish_on' => 'post_publish_date',
+            'title' => $formData['post_title'],
+            'body' => $formData['post_body'],
+            'publish_on' => $formData['post_publish_date'],
+            'user_id' => $session->get('user_id'),
         ]);
         $rowGateway->save();
 

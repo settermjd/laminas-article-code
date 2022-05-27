@@ -2,17 +2,18 @@
 
 namespace App\Service;
 
-use LinkedIn\Client;
+use League\OAuth2\Client\Provider\LinkedIn;
 use Psr\Container\ContainerInterface;
 
 class LinkedInClientFactory
 {
-    public function __invoke(ContainerInterface $container): Client
+    public function __invoke(ContainerInterface $container): LinkedIn
     {
         $config = $container->get('config')['linkedin'];
-        return (new Client(
-            $config['client_id'],
-            $config['client_secret']
-        ))->setRedirectUrl($config['redirect_url']);
+        return new LinkedIn([
+            'clientId'          => $config['client_id'],
+            'clientSecret'      => $config['client_secret'],
+            'redirectUri'       => $config['redirect_url'],
+        ]);
     }
 }

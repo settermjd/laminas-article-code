@@ -42,4 +42,91 @@ class UsersTableGateway extends AbstractTableGateway
 
         $this->initialize();
     }
+
+    public function createUser(array $userData): bool
+    {
+        return (bool)$this->insert(
+            [
+                'email_address' => $userData['email_address'],
+                'password' => $this->getPasswordHash($userData['password']),
+                'first_name' => $userData['first_name'],
+                'last_name' => $userData['last_name'],
+            ]
+        );
+    }
+
+    public function addForgotPasswordFlag(string $emailAddress, string $resetPasswordId): bool
+    {
+        return (bool)$this->update(
+            [
+                'reset_password_id' => $resetPasswordId,
+            ],
+            [
+                'email_address' => $emailAddress,
+            ]
+        );
+    }
+
+    public function resetPassword(string $emailAddress, string $password): bool
+    {
+        return (bool)$this->update(
+            [
+                'reset_password_id' => null,
+                'password' => $this->getPasswordHash($password),
+            ],
+            [
+                'email_address' => $emailAddress,
+            ]
+        );
+    }
+
+    public function findByEmail(string $emailAddress): ?User
+    {
+        $users = $this->select([
+            'email_address' => $emailAddress
+        ]);
+
+        if ($users->count()) {
+            return $users->current();
+        }
+
+        return null;
+    }
+
+    public function findByResetPasswordId(string $resetPasswordId): ?User
+    {
+        $users = $this->select([
+            'reset_password_id' => $resetPasswordId,
+        ]);
+
+        if ($users->count()) {
+            return $users->current();
+        }
+
+        return null;
+    }
+
+    public function findByEmailAndPassword(string $emailAddress): ?User
+    {
+        $users = $this->select([
+            'email_address' => $emailAddress,
+        ]);
+
+        if ($users->count()) {
+            return $users->current();
+        }
+
+        return null;
+    }
+
+    public function getPasswordHash(string $password): string
+    {
+        return password_hash(
+            $password,
+            PASSWORD_DEFAULT,
+            $options = [
+                'cost' => 14,
+            ]
+        );
+    }
 }

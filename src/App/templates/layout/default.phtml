@@ -26,15 +26,18 @@ $this->inlineScript();
             <p>
                 &copy; <?=date('Y')?> <a href="https://matthewsetter.com">Matthew Setter</a>.
                 All rights reserved.
-                <? if ($this->userId !== null): ?>
-                    <a href="/logout">Logout</a>
-                <? endif ?>
-                <? if ($this->userId === null && $this->matchedRouteName !== 'user.login'): ?>
+                <?php if ($this->userId !== null): ?>
+                    <a href="/logout">Logout</a> / <a href="/profile">Profile</a>
+                <?php endif ?>
+                <?php if ($this->userId === null && $this->matchedRouteName !== 'user.login'): ?>
                     <a href="/login">Login</a>
-                <? endif ?>
-                <? if ($this->userId === null && $this->matchedRouteName !== 'user.register'): ?>
+                <?php endif ?>
+                <?php if ($this->userId === null && $this->matchedRouteName !== 'user.register'): ?>
                     / <a href="/register">Register</a>
-                <? endif ?>
+                <?php endif ?>
+                <?php if ($this->userId === null && $this->matchedRouteName !== 'user.forgot-password'): ?>
+                    / <a href="/forgot-password">Forgot Password?</a>
+                <?php endif ?>
             </p>
         </div>
     </footer>
