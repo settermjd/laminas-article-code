@@ -2,6 +2,8 @@ services:
 
   nginx:
     image: nginx:1.21.6-alpine
+    depends_on:
+      - php
     ports:
       - "8001:80"
     volumes:
@@ -28,6 +30,7 @@ services:
 
   email:
     image: mailhog/mailhog:v1.0.1
+    restart: unless-stopped
     ports:
       - "1025:1025" # smtp server
       - "8025:8025" # web ui
