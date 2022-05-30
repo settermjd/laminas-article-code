@@ -12,11 +12,17 @@ use App\Database\UsersTableGateway;
 use App\Database\UsersTableGatewayFactory;
 use App\Middleware\TemplateDefaultsMiddleware;
 use App\Middleware\TemplateDefaultsMiddlewareFactory;
+use App\Middleware\UrlBuilderMiddleware;
+use App\Middleware\UrlBuilderMiddlewareFactory;
 use App\Service\Email\UserNotificationService;
 use App\Service\Email\UserNotificationServiceFactory;
 use App\Service\LinkedInClientFactory;
 use Laminas\Mail\Transport\TransportInterface;
 use League\OAuth2\Client\Provider\LinkedIn;
+use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Authentication\Session\PhpSession;
+use Mezzio\Authentication\UserRepository\PdoDatabase;
+use Mezzio\Authentication\UserRepositoryInterface;
 
 /**
  * The configuration provider for the App module
@@ -46,6 +52,10 @@ class ConfigProvider
     public function getDependencies(): array
     {
         return [
+            'aliases' => [
+                AuthenticationInterface::class => PhpSession::class,
+                UserRepositoryInterface::class => PdoDatabase::class
+            ],
             'invokables' => [
                 Handler\PingHandler::class => Handler\PingHandler::class,
             ],
@@ -56,6 +66,7 @@ class ConfigProvider
                 ScheduledPostsTableGateway::class => ScheduledPostsTableGatewayFactory::class,
                 TemplateDefaultsMiddleware::class => TemplateDefaultsMiddlewareFactory::class,
                 TransportInterface::class => EmailTransportFactory::class,
+                UrlBuilderMiddleware::class => UrlBuilderMiddlewareFactory::class,
                 UserNotificationService::class => UserNotificationServiceFactory::class,
                 UsersTableGateway::class => UsersTableGatewayFactory::class,
             ],

@@ -20,22 +20,22 @@ $this->inlineScript();
         </main>
     </div>
 
-    <footer class="app-footer">
+    <footer class="app-footer text-center">
         <div class="container">
             <hr />
             <p>
                 &copy; <?=date('Y')?> <a href="https://matthewsetter.com">Matthew Setter</a>.
                 All rights reserved.
-                <?php if ($this->userId !== null): ?>
+                <?php if ($this->authUser !== null): ?>
                     <a href="/logout">Logout</a> / <a href="/profile">Profile</a>
                 <?php endif ?>
-                <?php if ($this->userId === null && $this->matchedRouteName !== 'user.login'): ?>
+                <?php if ($this->authUser === null && $this->matchedRouteName !== 'user.login'): ?>
                     <a href="/login">Login</a>
                 <?php endif ?>
-                <?php if ($this->userId === null && $this->matchedRouteName !== 'user.register'): ?>
+                <?php if ($this->authUser === null && $this->matchedRouteName !== 'user.register'): ?>
                     / <a href="/register">Register</a>
                 <?php endif ?>
-                <?php if ($this->userId === null && $this->matchedRouteName !== 'user.forgot-password'): ?>
+                <?php if ($this->authUser === null && $this->matchedRouteName !== 'user.forgot-password'): ?>
                     / <a href="/forgot-password">Forgot Password?</a>
                 <?php endif ?>
             </p>

@@ -15,7 +15,8 @@ use Laminas\InputFilter\InputFilter;
 use Laminas\Validator\EmailAddress;
 use Mezzio\Flash\FlashMessageMiddleware;
 use Mezzio\Flash\FlashMessagesInterface;
-use Mezzio\Helper\UrlHelper;
+use Mezzio\Helper\ServerUrlHelper;
+use Mezzio\Router\RouterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -29,9 +30,8 @@ class ForgotPasswordHandler implements RequestHandlerInterface
 
     public function __construct(
         private readonly TemplateRendererInterface $renderer,
-        private readonly UsersTableGateway $table,
-        private readonly UserNotificationService $userNotificationService,
-        private readonly UrlHelper $urlHelper,
+        private readonly UsersTableGateway $userService,
+        private readonly UserNotificationService $userNotificationService
     ){
         $emailInput = new Input('email_address');
         $emailInput
@@ -51,10 +51,10 @@ class ForgotPasswordHandler implements RequestHandlerInterface
     {
         $data = [];
 
-        /** @var FlashMessagesInterface $flashMessages */
+        /** @var ?FlashMessagesInterface $flashMessages */
         $flashMessages = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
-        if ($request->getMethod() === 'POST') {
+        if (strtoupper($request->getMethod()) === 'POST') {
             $formData = $request->getParsedBody();
             $this->inputFilter->setData($formData);
 
@@ -63,30 +63,23 @@ class ForgotPasswordHandler implements RequestHandlerInterface
                     "message",
                     "Email address was invalid"
                 );
-                return new RedirectResponse(
-                    $this->urlHelper->generate('user.forgot-password')
-                );
+                return new RedirectResponse($this->generateUri($request, 'user.forgot-password'));
             }
 
-            $user = $this->table->findByEmail($formData['email_address']);
+            $user = $this->userService->findByEmail($formData['email_address']);
             if ($user !== null) {
                 $uuid = Uuid::uuid4();
-                $this->table->addForgotPasswordFlag($user->getEmailAddress(), $uuid->toString());
-                $emailUrl = $this
-                    ->urlHelper
-                    ->generate(
-                        'user.reset-password',
-                        [
-                            'id' => $uuid->toString(),
-                        ]
-                    );
-                $this->userNotificationService->sendResetPasswordEmail($user, $emailUrl);
+                $this->userService->addForgotPasswordFlag($user->getEmailAddress(), $uuid->toString());
+                $this->userNotificationService->sendResetPasswordEmail(
+                    $user,
+                    $this->generateUri($request, 'user.reset-password', ['id' => $uuid->toString()], [])
+                );
                 $flashMessages->flashNow(
                     "message",
-                    "Reset password has been sent to the registered email address"
+                    "A reset password email has been sent to the registered email address."
                 );
                 return new RedirectResponse(
-                    $this->urlHelper->generate('user.forgot-password')
+                    $this->generateUri($request, 'user.forgot-password')
                 );
             }
         }
@@ -94,5 +87,23 @@ class ForgotPasswordHandler implements RequestHandlerInterface
         $data['message'] = $flashMessages->getFlash("message");
 
         return new HtmlResponse($this->renderer->render('app::forgot-password', $data));
+    }
+
+    protected function generateUri(
+        ServerRequestInterface $request,
+        string $routeName,
+        array $substitutions = [],
+        array $options = []
+    ): string
+    {
+        /** @var ?ServerUrlHelper $urlHelper */
+        $urlHelper = $request->getAttribute(ServerUrlHelper::class);
+
+        /** @var ?RouterInterface $router */
+        $router = $request->getAttribute(RouterInterface::class);
+
+        return $urlHelper->generate(
+            $router->generateUri($routeName, $substitutions, $options)
+        );
     }
 }

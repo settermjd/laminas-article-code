@@ -8,6 +8,9 @@ use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\Sql;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Authentication\UserInterface;
+use Mezzio\Session\SessionInterface;
+use Mezzio\Session\SessionMiddleware;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -28,6 +31,9 @@ class HomePageHandler implements RequestHandlerInterface
     {
         $data = [];
         $data['scheduled_posts'] = $this->getScheduledPosts();
+
+        /** @var SessionInterface $session */
+        $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
 
         $postId = $request->getAttribute('id');
         if ($postId !== null) {

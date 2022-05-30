@@ -24,6 +24,8 @@ return [
             App\Handler\UserProfileHandler::class => App\Handler\UserProfileHandlerFactory::class,
             App\Middleware\IsLoggedInMiddleware::class => App\Middleware\IsLoggedInMiddlewareFactory::class,
             App\Middleware\TemplateDefaultsMiddleware::class => App\Middleware\TemplateDefaultsMiddlewareFactory::class,
+            App\Middleware\UrlBuilderMiddleware::class => App\Middleware\UrlBuilderMiddlewareFactory::class,
+            App\Repository\UserSqliteDatabaseRepository::class => App\Repository\UserSqliteDatabaseRepositoryFactory::class,
             App\Service\Email\UserNotificationService::class => App\Service\Email\UserNotificationServiceFactory::class,
         ],
     ],

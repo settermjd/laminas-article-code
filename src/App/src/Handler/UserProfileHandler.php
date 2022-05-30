@@ -6,6 +6,7 @@ namespace App\Handler;
 
 use App\Database\UsersTableGateway;
 use App\Entity\User;
+use Mezzio\Authentication\UserInterface;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionMiddleware;
 use Psr\Http\Message\ResponseInterface;
@@ -18,23 +19,21 @@ class UserProfileHandler implements RequestHandlerInterface
 {
     public function __construct(
         private readonly TemplateRendererInterface $renderer,
-        private readonly UsersTableGateway $table
+        private readonly UsersTableGateway $userService
     ){}
 
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        /** @var SessionInterface $session */
+        /** @var ?SessionInterface $session */
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
 
-        /** @var User $user */
+        /** @var ?UserInterface $user */
+        $user = $session->get(UserInterface::class);
+
+        /** @var ?User $user */
         $user = $this
-            ->table
-            ->select(
-                [
-                    'id' => $session->get('user_id')
-                ]
-            )
-            ->current();
+            ->userService
+            ->findByEmail($user['username']);
 
         return new HtmlResponse($this->renderer->render(
             'app::user-profile',

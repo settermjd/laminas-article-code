@@ -80,6 +80,19 @@ class UsersTableGateway extends AbstractTableGateway
         );
     }
 
+    public function findById(string $id): ?User
+    {
+        $users = $this->select([
+            'id' => $id
+        ]);
+
+        if ($users->count()) {
+            return $users->current();
+        }
+
+        return null;
+    }
+
     public function findByEmail(string $emailAddress): ?User
     {
         $users = $this->select([

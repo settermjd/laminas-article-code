@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 use App\Middleware\IsLoggedInMiddleware;
+use App\Middleware\UrlBuilderMiddleware;
 use Mezzio\Application;
+use Mezzio\Authentication\AuthenticationMiddleware;
 use Mezzio\Flash\FlashMessageMiddleware;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
@@ -43,24 +45,15 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->get(
         '/[{id:\d+}]',
         [
-            IsLoggedInMiddleware::class,
+            AuthenticationMiddleware::class,
             App\Handler\HomePageHandler::class
         ],
         'home'
     );
-    $app->post(
-        '/posts',
-        [
-            IsLoggedInMiddleware::class,
-            App\Handler\PostProcessorHandler::class
-        ],
-        'posts.process'
-    );
-    $app->get('/api/ping', App\Handler\PingHandler::class, 'api.ping');
     $app->get(
         '/profile',
         [
-            IsLoggedInMiddleware::class,
+            AuthenticationMiddleware::class,
             App\Handler\UserProfileHandler::class,
         ],
         'user.profile'
@@ -79,7 +72,10 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     );
     $app->route(
         '/forgot-password',
-        App\Handler\ForgotPasswordHandler::class,
+        [
+            UrlBuilderMiddleware::class,
+            App\Handler\ForgotPasswordHandler::class,
+        ],
         ['get', 'post'],
         'user.forgot-password'
     );

@@ -15,7 +15,7 @@ class LogoutHandler implements RequestHandlerInterface
 {
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        /** @var SessionInterface $session */
+        /** @var ?SessionInterface $session */
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
         $session->clear();
         $session->regenerate();

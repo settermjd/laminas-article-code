@@ -1,21 +1,21 @@
 <?php $this->headTitle('Home'); ?>
 
-<div class="mb-4 p-2">
-    <h1 class="text-center"><a href="/">Sign in to your account</a></h1>
+<div class="mb-4 p-2 w-auto">
+    <h1 class="text-center">Sign in to your account</h1>
     <?= $this->partial('app::message'); ?>
-    <div class="grid gap-4 mt-8 border-2 bg-white border-slate-200 p-8 rounded-lg w-4/5 w-auto">
-        <div>
+    <div class="grid gap-4 mt-8 border-2 bg-white border-slate-200 p-8 rounded-lg w-7/12 mx-auto">
+        <div class="py-2 px-4">
             <form id="linkedin-post-scheduler"
                   class="grid grid-cols-1 gap-2"
                   method="post"
                   action="/login">
-                <div class="w-full">
+                <div class="w-full mb-4">
                     <label for="email_address">Email Address:</label>
                     <input type="email"
                            name="email_address"
                            id="email_address">
                 </div>
-                <div class="w-full">
+                <div class="w-full mb-4">
                     <label>Password:</label>
                     <input type="password"
                            name="password">

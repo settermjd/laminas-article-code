@@ -14,9 +14,6 @@
                     <p class="mb-0 font-bold text-purple-800"><?= $this->user->getFirstName(); ?> <?= $this->user->getLastName(); ?></p>
                     <p class="mb-2 mt-0"><?= $this->user->getEmailAddress(); ?></p></div>
                 <p class="mb-2 mt-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dignissim volutpat velit non posuere. Donec pulvinar, metus a facilisis congue, arcu ex egestas nisi, nec consectetur quam nisi vel purus. Ut vulputate ligula neque, eget varius turpis eleifend vel. Morbi elementum sem in sapien dignissim, ut convallis magna ullamcorper. Etiam vel enim nisi. Donec at aliquam nulla. Quisque cursus vulputate dignissim. Donec efficitur augue quam. Integer sit amet nulla ullamcorper, hendrerit neque vel, aliquam risus. Donec magna justo, blandit in sapien ac, commodo tempor ligula. Suspendisse mauris nisi, posuere non varius ac, cursus facilisis elit. Nullam lacinia sollicitudin leo vel mollis. Ut luctus, velit nec sollicitudin vestibulum, enim massa placerat ex, eget lacinia felis nisl non justo. Integer auctor auctor urna. Pellentesque mollis massa enim, in fermentum est varius pulvinar. Phasellus a massa luctus, scelerisque augue a, accumsan est. </p>
-                <?php if (! $this->user->isIntegratedWithLinkedIn()): ?>
-                <a href="/linkedin-integration" class="block text-center mt-4 py-4 bg-purple-800 hover:bg-purple-700 p-2 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 text-white font-semibold px-4 rounded-lg w-full hover:ease-in ease-out transition duration-150 hover:drop-shadow-md">Integrate with LinkedIn</a>
-                <?php endif ?>
             </div>
         </div>
     </div>

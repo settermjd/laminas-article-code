@@ -6,7 +6,9 @@ namespace App\Handler;
 
 use App\Database\UsersTableGateway;
 use App\Service\Email\UserNotificationService;
+use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
+use Mezzio\Router\RouterInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
 
@@ -18,7 +20,6 @@ class ForgotPasswordHandlerFactory
             $container->get(TemplateRendererInterface::class),
             $container->get(UsersTableGateway::class),
             $container->get(UserNotificationService::class),
-            $container->get(UrlHelper::class),
         );
     }
 }

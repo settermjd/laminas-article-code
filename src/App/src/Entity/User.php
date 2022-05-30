@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
-class User
+use Mezzio\Authentication\UserInterface;
+
+class User implements UserInterface
 {
     private int $id;
     private string $emailAddress;
@@ -67,21 +69,6 @@ class User
         $this->password = $password;
     }
 
-    public function getLinkedinURN(): string
-    {
-        return $this->linkedinURN;
-    }
-
-    public function setLinkedinURN(?string $linkedinURN = null): void
-    {
-        $this->linkedinURN = $linkedinURN;
-    }
-
-    public function isIntegratedWithLinkedIn(): bool
-    {
-        return (! empty($this->linkedinURN));
-    }
-
     public function toArray(): array
     {
         return [];
@@ -95,5 +82,25 @@ class User
     public function setResetPasswordId(?string $resetPasswordId): void
     {
         $this->resetPasswordId = $resetPasswordId;
+    }
+
+    public function getIdentity(): string
+    {
+        // TODO: Implement getIdentity() method.
+    }
+
+    public function getRoles(): iterable
+    {
+        // TODO: Implement getRoles() method.
+    }
+
+    public function getDetail(string $name, $default = null)
+    {
+        // TODO: Implement getDetail() method.
+    }
+
+    public function getDetails(): array
+    {
+        // TODO: Implement getDetails() method.
     }
 }

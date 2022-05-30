@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Middleware;
 
+use Mezzio\Authentication\UserInterface;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionMiddleware;
 use Psr\Http\Message\ResponseInterface;
@@ -46,8 +47,8 @@ class TemplateDefaultsMiddleware implements MiddlewareInterface
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
         $this->templateRenderer->addDefaultParam(
             TemplateRendererInterface::TEMPLATE_ALL,
-            'userId',
-            $session->get('user_id')
+            'authUser',
+            $session->get(UserInterface::class)
         );
 
         return $handler->handle($request);
