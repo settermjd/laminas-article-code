@@ -2,13 +2,19 @@
 
 declare(strict_types=1);
 
-use App\Middleware\IsLoggedInMiddleware;
-use App\Middleware\UrlBuilderMiddleware;
 use Mezzio\Application;
 use Mezzio\Authentication\AuthenticationMiddleware;
-use Mezzio\Flash\FlashMessageMiddleware;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
+use User\Handler\ForgotPasswordHandler;
+use User\Handler\HomePageHandler;
+use User\Handler\LinkedInIntegrationHandler;
+use User\Handler\LoginHandler;
+use User\Handler\LogoutHandler;
+use User\Handler\RegistrationHandler;
+use User\Handler\ResetPasswordHandler;
+use User\Handler\UserProfileHandler;
+use User\Middleware\UrlBuilderMiddleware;
 
 /**
  * FastRoute route configuration
@@ -17,25 +23,25 @@ use Psr\Container\ContainerInterface;
  *
  * Setup routes with a single request method:
  *
- * $app->get('/', App\Handler\HomePageHandler::class, 'home');
- * $app->post('/album', App\Handler\AlbumCreateHandler::class, 'album.create');
- * $app->put('/album/{id:\d+}', App\Handler\AlbumUpdateHandler::class, 'album.put');
- * $app->patch('/album/{id:\d+}', App\Handler\AlbumUpdateHandler::class, 'album.patch');
- * $app->delete('/album/{id:\d+}', App\Handler\AlbumDeleteHandler::class, 'album.delete');
+ * $app->get('/', User\Handler\HomePageHandler::class, 'home');
+ * $app->post('/album', User\Handler\AlbumCreateHandler::class, 'album.create');
+ * $app->put('/album/{id:\d+}', User\Handler\AlbumUpdateHandler::class, 'album.put');
+ * $app->patch('/album/{id:\d+}', User\Handler\AlbumUpdateHandler::class, 'album.patch');
+ * $app->delete('/album/{id:\d+}', User\Handler\AlbumDeleteHandler::class, 'album.delete');
  *
  * Or with multiple request methods:
  *
- * $app->route('/contact', App\Handler\ContactHandler::class, ['GET', 'POST', ...], 'contact');
+ * $app->route('/contact', User\Handler\ContactHandler::class, ['GET', 'POST', ...], 'contact');
  *
  * Or handling all request methods:
  *
- * $app->route('/contact', App\Handler\ContactHandler::class)->setName('contact');
+ * $app->route('/contact', User\Handler\ContactHandler::class)->setName('contact');
  *
  * or:
  *
  * $app->route(
  *     '/contact',
- *     App\Handler\ContactHandler::class,
+ *     User\Handler\ContactHandler::class,
  *     Mezzio\Router\Route::HTTP_METHOD_ANY,
  *     'contact'
  * );
@@ -46,7 +52,7 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
         '/[{id:\d+}]',
         [
             AuthenticationMiddleware::class,
-            App\Handler\HomePageHandler::class
+            HomePageHandler::class
         ],
         'home'
     );
@@ -54,19 +60,19 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
         '/profile',
         [
             AuthenticationMiddleware::class,
-            App\Handler\UserProfileHandler::class,
+            UserProfileHandler::class,
         ],
         'user.profile'
     );
     $app->route(
         '/login',
-        App\Handler\LoginHandler::class,
+        LoginHandler::class,
         ['get', 'post'],
         'user.login'
     );
     $app->route(
         '/linkedin-integration',
-        App\Handler\LinkedInIntegrationHandler::class,
+        LinkedInIntegrationHandler::class,
         ['get', 'post'],
         'user.linkedin.integration'
     );
@@ -74,26 +80,26 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
         '/forgot-password',
         [
             UrlBuilderMiddleware::class,
-            App\Handler\ForgotPasswordHandler::class,
+            ForgotPasswordHandler::class,
         ],
         ['get', 'post'],
         'user.forgot-password'
     );
     $app->route(
         '/reset-password/{id:[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}}',
-        App\Handler\ResetPasswordHandler::class,
+        ResetPasswordHandler::class,
         ['get', 'post'],
         'user.reset-password'
     );
     $app->route(
         '/register',
-        App\Handler\RegistrationHandler::class,
+        RegistrationHandler::class,
         ['get', 'post'],
         'user.register'
     );
     $app->get(
         '/logout',
-        App\Handler\LogoutHandler::class,
+        LogoutHandler::class,
         'user.logout'
     );
 };

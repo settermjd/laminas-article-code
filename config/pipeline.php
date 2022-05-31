@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Middleware\TemplateDefaultsMiddleware;
 use Laminas\Stratigility\Middleware\ErrorHandler;
 use Mezzio\Application;
 use Mezzio\Flash\FlashMessageMiddleware;
@@ -17,6 +16,7 @@ use Mezzio\Router\Middleware\MethodNotAllowedMiddleware;
 use Mezzio\Router\Middleware\RouteMiddleware;
 use Mezzio\Session\SessionMiddleware;
 use Psr\Container\ContainerInterface;
+use User\Middleware\TemplateDefaultsMiddleware;
 
 /**
  * Setup middleware pipeline:
