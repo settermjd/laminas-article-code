@@ -22,6 +22,8 @@ use Ramsey\Uuid\Uuid;
 
 class ForgotPasswordHandler implements RequestHandlerInterface
 {
+    use UriHelperTrait;
+
     private InputFilter $inputFilter;
 
     public function __construct(
@@ -92,23 +94,5 @@ class ForgotPasswordHandler implements RequestHandlerInterface
         $data['message'] = $flashMessages->getFlash("message");
 
         return new HtmlResponse($this->renderer->render('app::forgot-password', $data));
-    }
-
-    protected function generateUri(
-        ServerRequestInterface $request,
-        string $routeName,
-        array $substitutions = [],
-        array $options = []
-    ): string
-    {
-        /** @var ?ServerUrlHelper $urlHelper */
-        $urlHelper = $request->getAttribute(ServerUrlHelper::class);
-
-        /** @var ?RouterInterface $router */
-        $router = $request->getAttribute(RouterInterface::class);
-
-        return $urlHelper->generate(
-            $router->generateUri($routeName, $substitutions, $options)
-        );
     }
 }
