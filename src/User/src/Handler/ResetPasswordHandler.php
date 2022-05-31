@@ -7,18 +7,13 @@ namespace User\Handler;
 use User\Database\UsersTableGateway;
 use User\Service\Email\UserNotificationService;
 use Laminas\Diactoros\Response\RedirectResponse;
-use Laminas\Filter\StringTrim;
-use Laminas\Filter\StripNewlines;
-use Laminas\Filter\StripTags;
-use Laminas\InputFilter\Input;
-use Laminas\InputFilter\InputFilter;
+use Laminas\Filter\{StringTrim,StripNewlines,StripTags};
+use Laminas\InputFilter\{Input,InputFilter};
 use Laminas\Validator\Identical;
-use Mezzio\Flash\FlashMessageMiddleware;
-use Mezzio\Flash\FlashMessagesInterface;
+use Mezzio\Flash\{FlashMessageMiddleware,FlashMessagesInterface};
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Router\RouterInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\{ResponseInterface,ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Template\TemplateRendererInterface;
@@ -70,7 +65,10 @@ class ResetPasswordHandler implements RequestHandlerInterface
 
         $user = $this->userService->findByResetPasswordId($resetId);
         if ($user === null) {
-            $flashMessages->flash("message", "No reset password request is available for that user.");
+            $flashMessages->flash(
+                "message",
+                "No reset password request is available for that user."
+            );
             return new RedirectResponse('/');
         }
 
@@ -85,7 +83,10 @@ class ResetPasswordHandler implements RequestHandlerInterface
             }
 
             $emailUrl = $this->serverUrlHelper->generate($this->router->generateUri('home'));
-            $this->userService->resetPassword($user->getEmailAddress(), $this->inputFilter->getValue('password'));
+            $this->userService->resetPassword(
+                $user->emailAddress,
+                $this->inputFilter->getValue('password')
+            );
             $this->userNotificationService
                 ->sendResetPasswordConfirmationEmail(
                     $user->getEmailAddress(),

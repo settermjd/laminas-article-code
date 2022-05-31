@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace User\Service\Email;
 
 use User\Entity\User;
-use Laminas\Mail\Message;
-use Laminas\Mail\Transport\TransportInterface;
+use Laminas\Mail\{Message,Transport\TransportInterface};
 
 class UserNotificationService
 {

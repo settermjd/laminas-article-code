@@ -7,16 +7,12 @@ namespace User\Handler;
 use User\Database\UsersTableGateway;
 use User\Service\Email\UserNotificationService;
 use Laminas\Diactoros\Response\RedirectResponse;
-use Laminas\Filter\StringTrim;
-use Laminas\Filter\StripNewlines;
-use Laminas\Filter\StripTags;
+use Laminas\Filter\{StringTrim,StripNewlines,StripTags};
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
 use Laminas\Validator\EmailAddress;
 use Mezzio\Flash\FlashMessageMiddleware;
 use Mezzio\Flash\FlashMessagesInterface;
-use Mezzio\Helper\ServerUrlHelper;
-use Mezzio\Router\RouterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -63,16 +59,25 @@ class ForgotPasswordHandler implements RequestHandlerInterface
                     "message",
                     "Email address was invalid"
                 );
-                return new RedirectResponse($this->generateUri($request, 'user.forgot-password'));
+                return new RedirectResponse(
+                    $this->generateUri($request, 'user.forgot-password')
+                );
             }
 
             $user = $this->userService->findByEmail($formData['email_address']);
             if ($user !== null) {
                 $uuid = Uuid::uuid4();
-                $this->userService->addForgotPasswordFlag($user->getEmailAddress(), $uuid->toString());
+                $this->userService->addForgotPasswordFlag(
+                    $user->emailAddress,
+                    $uuid->toString()
+                );
                 $this->userNotificationService->sendResetPasswordEmail(
                     $user,
-                    $this->generateUri($request, 'user.reset-password', ['id' => $uuid->toString()], [])
+                    $this->generateUri(
+                        $request,
+                        'user.reset-password',
+                        ['id' => $uuid->toString()],
+                    )
                 );
                 $flashMessages->flashNow(
                     "message",
