@@ -69,7 +69,7 @@ class RegistrationHandler implements RequestHandlerInterface
             $user = $this->userService->findByEmail($this->inputFilter->getValue('email_address'));
             /** @var ?SessionInterface $session */
             $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
-            $session->set('user_id', $user->getId());
+            $session->set('user_id', $user->id);
         }
 
         return new RedirectResponse('/');

@@ -89,8 +89,8 @@ class ResetPasswordHandler implements RequestHandlerInterface
             );
             $this->userNotificationService
                 ->sendResetPasswordConfirmationEmail(
-                    $user->getEmailAddress(),
-                    $user->getFullName(),
+                    $user->emailAddress,
+                    $user->fullName,
                     $emailUrl,
                 );
             $flashMessages->flash("message", "Password has been reset.");
