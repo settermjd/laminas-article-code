@@ -12,46 +12,27 @@ class User
     private readonly string $password;
     private readonly ?string $resetPasswordId;
 
+    public function __construct(array $properties = [])
+    {
+        foreach ($properties as $property => $value) {
+            $this->$property = $value;
+        }
+    }
+
     public function __get(string $property)
     {
         return match($property) {
-            'Id' => $this->id,
-            'EmailAddress' => $this->emailAddress,
+            'id' => $this->id,
+            'emailAddress' => $this->emailAddress,
+            'firstName' => $this->firstName,
+            'lastName' => $this->lastName,
+            'password' => $this->password,
+            'resetPasswordId' => $this->resetPasswordId,
+            'fullName' => sprintf(
+                "%s %s",
+                $this->firstName,
+                $this->lastName
+            )
         };
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getEmailAddress(): string
-    {
-        return $this->emailAddress;
-    }
-
-    public function getFirstName(): string
-    {
-        return $this->firstName;
-    }
-
-    public function getLastName(): string
-    {
-        return $this->lastName;
-    }
-
-    public function getFullName(): string
-    {
-        return sprintf("%s %s", $this->firstName, $this->lastName);
-    }
-
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
-    public function getResetPasswordId(): ?string
-    {
-        return $this->resetPasswordId;
     }
 }
