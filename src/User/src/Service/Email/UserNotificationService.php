@@ -56,9 +56,27 @@ EOF;
         $mail = new Message();
         $mail
             ->setBody(sprintf($body, $baseUrl))
-            ->setFrom($this->config['fromAddress'], $this->config['fromName'])
             ->addTo($toAddress, $toName)
             ->setSubject("Your password has been reset");
+
+        $this->transport->send($mail);
+    }
+
+    public function sendAccountCreatedEmail(string $toAddress, string $toName, string $baseUrl)
+    {
+        $body =<<<EOF
+Your account has been created with the username: %s.
+
+You can login here: %s.
+
+Your awesome support team.
+EOF;
+
+        $mail = new Message();
+        $mail
+            ->setBody(sprintf($body, $this->config['baseUrl']))
+            ->addTo($toAddress, $toName)
+            ->setSubject("Your password has been created");
 
         $this->transport->send($mail);
     }
