@@ -22,12 +22,7 @@ class User
     public function __get(string $property)
     {
         return match($property) {
-            'id' => $this->id,
-            'emailAddress' => $this->emailAddress,
-            'firstName' => $this->firstName,
-            'lastName' => $this->lastName,
-            'password' => $this->password,
-            'resetPasswordId' => $this->resetPasswordId,
+            'id', 'emailAddress', 'firstName', 'lastName', 'password', 'resetPasswordId' => $this->$property,
             'fullName' => sprintf(
                 "%s %s",
                 $this->firstName,
