@@ -9,10 +9,18 @@ use Laminas\Mail\{Message,Transport\TransportInterface};
 
 class UserNotificationService
 {
+    private Message $mail;
+
     public function __construct(
         private readonly TransportInterface $transport,
         private readonly array $config
-    ){}
+    ){
+        $this->mail = (new Message())
+            ->setFrom(
+                $this->config['fromAddress'],
+                $this->config['fromName']
+            );
+    }
 
     /**
      * @todo Need to inject a reset password id and the reset password URL
@@ -27,14 +35,12 @@ If you don't want to reset your password, you can ignore this email.
 Open %s to reset your password.
 EOF;
 
-        $mail = new Message();
-        $mail
+        $this->mail
             ->setBody(sprintf($body, $user->getEmailAddress(), $resetPasswordUrl))
-            ->setFrom($this->config['fromAddress'], $this->config['fromName'])
             ->addTo($user->getEmailAddress(), $user->getFullName())
             ->setSubject("Reset your password");
 
-        $this->transport->send($mail);
+        $this->transport->send($this->mail);
     }
 
     public function sendResetPasswordConfirmationEmail(string $toAddress, string $toName, string $baseUrl)
