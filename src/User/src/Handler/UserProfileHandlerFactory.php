@@ -12,8 +12,9 @@ class UserProfileHandlerFactory
 {
     public function __invoke(ContainerInterface $container) : UserProfileHandler
     {
-        $renderer = $container->get(TemplateRendererInterface::class);
-        $table = $container->get(UsersTableGateway::class);
-        return new UserProfileHandler($renderer, $table);
+        return new UserProfileHandler(
+            $container->get(TemplateRendererInterface::class),
+            $container->get(UsersTableGateway::class)
+        );
     }
 }
